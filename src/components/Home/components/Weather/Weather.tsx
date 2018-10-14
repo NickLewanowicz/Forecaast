@@ -20,11 +20,13 @@ interface State {
   location: string;
   countryCode: string;
   unit: string;
+  error: boolean | null;
 }
 
 export default class Weather extends React.Component<{}, State> {
   public state = {
     countryCode: 'CA',
+    error: null,
     location: 'Ottawa',
     unit: 'metric',
     weather: null
@@ -54,7 +56,6 @@ export default class Weather extends React.Component<{}, State> {
               </div>
             </div>
             <div className="weather">
-            
               <CurrentWeather {...weather}/>
             </div>
           </div>
@@ -65,8 +66,7 @@ export default class Weather extends React.Component<{}, State> {
     return (
       <div className="mainContainer">
       <div className="weather">
-        <em>Weather loading</em>
-        <ErrorMessage/>
+        {this.state.error ? <ErrorMessage/> : <em>Weather loading</em>}
       </div>
     </div>
     )
@@ -93,7 +93,10 @@ export default class Weather extends React.Component<{}, State> {
         return res.json()
       })
     .then(json => { 
-        json = json.cod === 200 ? json : {"coord":{"lon":-0.13,"lat":51.51},"weather":[{"id":300,"main":"Drizzle","description":"light intensity drizzle","icon":"09d"}],"base":"stations","main":{"temp":28.32,"pressure":1012,"humidity":81,"temp_min":27.15,"temp_max":28.15},"visibility":10000,"wind":{"speed":4.1,"deg":80},"clouds":{"all":90},"dt":1485789600,"sys":{"type":1,"id":5091,"message":0.0103,"country":"GB","sunrise":1485762037,"sunset":1485794875},"id":2643743,"name":"London","cod":200}
+        // json = json.cod === 200 ? json : {"coord":{"lon":-0.13,"lat":51.51},"weather":[{"id":300,"main":"Drizzle","description":"light intensity drizzle","icon":"09d"}],"base":"stations","main":{"temp":28.32,"pressure":1012,"humidity":81,"temp_min":27.15,"temp_max":28.15},"visibility":10000,"wind":{"speed":4.1,"deg":80},"clouds":{"all":90},"dt":1485789600,"sys":{"type":1,"id":5091,"message":0.0103,"country":"GB","sunrise":1485762037,"sunset":1485794875},"id":2643743,"name":"London","cod":200}
+        if(json.cod !== 200){
+          this.setState({error: true})
+        }
         const { name: city, 
                 main: {humidity, temp: temperature, temp_max: high, temp_min: low}, 
                 sys: { sunrise, sunset }, 
