@@ -1,0 +1,46 @@
+.mainContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.weather {
+  background: linear-gradient(-45deg, rgba(0,9,36,1) 0%, rgba(75,183,252,1) 0%, rgb(131, 82, 236) 100%);
+  width: 70%;
+  height: 200px;
+  padding: 30px 50px 80px 50px;
+  border-radius: .6em;
+  color: #fff;
+  font-family: -apple-system,BlinkMacSystemFont,sans-serif,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+  font-size: 40px;
+  transition: all .6s cubic-bezier(0,.5,.51,1);
+	margin-top: 60px;
+	margin-bottom: 30px;
+  -webkit-box-shadow: 0px 10px 40px -5px rgba(0,0,0,0.2);
+	-moz-box-shadow: 0px 10px 40px -5px rgba(0,0,0,0.2);
+	box-shadow: 0px 10px 40px -5px rgba(0,0,0,0.2);
+}
+
+.weather em {
+    font-weight: 600;
+    font-size: 30px;
+}
+
+@media only screen and (max-width: 770px) {
+
+  .weather {
+    height: 250px;
+    padding: 15px 25px 100px 25px;
+  }
+}
+
+@media only screen and (min-width: 910px) {
+
+  .weather {
+    height: 250px;
+    padding: 15px 25px 100px 25px;
+  }
+
+}
+
+
