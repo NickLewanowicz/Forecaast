@@ -6,9 +6,9 @@
 
 .weather {
   background: linear-gradient(-45deg, rgba(0,9,36,1) 0%, rgba(75,183,252,1) 0%, rgb(131, 82, 236) 100%);
-  width: 70%;
+  width: 80%;
   height: 200px;
-  padding: 30px 50px 80px 50px;
+  padding: 30px 30px 80px 30px;
   border-radius: .6em;
   color: #fff;
   font-family: -apple-system,BlinkMacSystemFont,sans-serif,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial;
@@ -24,6 +24,14 @@
 .weather em {
     font-weight: 600;
     font-size: 30px;
+}
+
+.description {
+  color: #31e6ad;
+}
+
+.city {
+  color: rgb(255, 163, 243);
 }
 
 @media only screen and (max-width: 770px) {
