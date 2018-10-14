@@ -9,6 +9,9 @@
   },
   "rules": {
       "no-console": false,
-      "interface-name" : [true, "never-prefix"],     
+      "interface-name" : [true, "never-prefix"],
+      "no-shadowed-variable": [
+        false
+      ]      
   }
 }
