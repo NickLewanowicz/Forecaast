@@ -5,7 +5,7 @@ export class ErrorMessage extends React.Component {
   public render() {
     return (
       <div>
-        ErrorMessage
+        Oopsie, woopsie. Looks like there was an error, please refresh and try again.
       </div>
     )
   }
