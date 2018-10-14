@@ -1,7 +1,24 @@
 import * as React from 'react';
 import './Weather.css'
 
-export default class Weather extends React.Component {
+interface CurrentWeather {
+  city: string;
+  high: number;
+  low: number;
+  temperature: number;
+  sunrise: number;
+  sunset: number;
+  humidity: number;
+  description: string;
+  icon: string;
+  main: string;
+}
+
+interface State {
+  weather: CurrentWeather | null; 
+}
+
+export default class Weather extends React.Component<{}, State> {
   public render() {
     const countryCode: string = 'CA'
     const city: string = 'Ottawa'
@@ -12,7 +29,7 @@ export default class Weather extends React.Component {
       <div className="mainContainer">
         <div className="weather">
           <em>Your Weather is:</em>
-          
+            
         </div>
       </div>
     )
@@ -23,8 +40,22 @@ export default class Weather extends React.Component {
                 console.log(res);
                 return res.json()
              })
-            .then(weather => { 
-                console.log(weather); 
+            .then(json => { 
+                const { name: city, main: {humidity, temp: temperature, temp_max: high, temp_min: low}, sys: { sunrise, sunset }, weather:weatherArr } = json
+                const { description, icon, main } = weatherArr[0]
+                const weather: CurrentWeather = {
+                  city,
+                  description,
+                  high,
+                  humidity,
+                  icon,
+                  low,
+                  main,
+                  sunrise,
+                  sunset,
+                  temperature,
+                }
+                this.setState({weather})
              });
 
   } 
