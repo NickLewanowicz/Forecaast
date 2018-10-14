@@ -1,7 +1,8 @@
 import * as React from 'react';
+import {CurrentWeather, ErrorMessage} from './components';
 import './Weather.css'
 
-interface CurrentWeather {
+export interface CurrentWeatherType {
   city: string;
   high: number;
   low: number;
@@ -15,7 +16,7 @@ interface CurrentWeather {
 }
 
 interface State {
-  weather: CurrentWeather | null; 
+  weather: CurrentWeatherType | null; 
 }
 
 export default class Weather extends React.Component<{}, State> {
@@ -30,8 +31,7 @@ export default class Weather extends React.Component<{}, State> {
         return (
           <div className="mainContainer">
             <div className="weather">
-              <div><em>Your Weather is:</em></div>
-              {weather.city}
+              <CurrentWeather {...weather}/>
             </div>
           </div>
         )
@@ -42,6 +42,7 @@ export default class Weather extends React.Component<{}, State> {
       <div className="mainContainer">
       <div className="weather">
         <em>Weather loading</em>
+        <ErrorMessage/>
       </div>
     </div>
     )
@@ -62,17 +63,9 @@ export default class Weather extends React.Component<{}, State> {
                 weather: weatherArr
               } = json
         const { description, icon, main } = weatherArr[0]
-        const weather: CurrentWeather = {
-          city,
-          description,
-          high,
-          humidity,
-          icon,
-          low,
-          main,
-          sunrise,
-          sunset,
-          temperature,
+        const weather: CurrentWeatherType = {
+          city, description, high, humidity,icon,
+          low, main, sunrise, sunset, temperature,
         }
         console.log(weather)
         this.setState({weather})
