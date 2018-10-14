@@ -17,12 +17,21 @@ export interface CurrentWeatherType {
 
 interface State {
   weather: CurrentWeatherType | null; 
+  location: string;
+  countryCode: string;
+  unit: string;
 }
 
 export default class Weather extends React.Component<{}, State> {
+  public state = {
+    countryCode: 'CA',
+    location: 'Ottawa',
+    unit: 'metric',
+    weather: null
+  }
   public render() {
     const countryCode: string = 'CA'
-    const city: string = 'Ottawa'
+    const city: string = this.state.location
     const unit: string = 'metric'
     const API_KEY: string = process.env.REACT_APP_WEATHER_API_KEY || '';
     if(this.state && this.state.weather){
@@ -30,7 +39,22 @@ export default class Weather extends React.Component<{}, State> {
       if(weather){
         return (
           <div className="mainContainer">
+            <div className="location">
+              <div className="leftAuth">
+                <form onSubmit={this.submitNumber}>
+                  <label className='label'>Location:</label><br />
+                  <input
+                    className="locationInput"
+                    type="text"
+                    value={this.state.location || ''}
+                    onChange={this.handleChange}
+                  />
+                  <input className="submitButton" type="submit" value="Submit" />
+                </form>
+              </div>
+            </div>
             <div className="weather">
+            
               <CurrentWeather {...weather}/>
             </div>
           </div>
@@ -46,9 +70,22 @@ export default class Weather extends React.Component<{}, State> {
       </div>
     </div>
     )
-    
-    
   }
+
+  public handleChange = (event: any) => {
+    this.setState({
+      location: event.target.value,
+    })
+  }
+
+  public submitNumber = (event: any) => {
+    const { location: city, countryCode, unit } = this.state;
+    const API_KEY = process.env.REACT_APP_WEATHER_API_KEY || ''
+    event.preventDefault();
+    this.setState({location: this.state.location})
+    this.fetchWeather(city, countryCode, unit, API_KEY);
+  }
+
   private fetchWeather( city: string,countryCode: string, unit:string, apiKey:string):void {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&units=${unit}&appid=${apiKey}`)
     .then(res => {
