@@ -32,9 +32,7 @@ export default class Weather extends React.Component<{}, State> {
     weather: null
   }
   public render() {
-    const countryCode: string = 'CA'
-    const city: string = this.state.location
-    const unit: string = 'metric'
+    const { location: city, countryCode, unit } = this.state;
     const API_KEY: string = process.env.REACT_APP_WEATHER_API_KEY || '';
     if(this.state && this.state.weather){
       const {weather} = this.state;
@@ -92,24 +90,30 @@ export default class Weather extends React.Component<{}, State> {
         console.log(res);
         return res.json()
       })
+    .catch(error => {
+      console.log(error)
+    })
     .then(json => { 
-        // json = json.cod === 200 ? json : {"coord":{"lon":-0.13,"lat":51.51},"weather":[{"id":300,"main":"Drizzle","description":"light intensity drizzle","icon":"09d"}],"base":"stations","main":{"temp":28.32,"pressure":1012,"humidity":81,"temp_min":27.15,"temp_max":28.15},"visibility":10000,"wind":{"speed":4.1,"deg":80},"clouds":{"all":90},"dt":1485789600,"sys":{"type":1,"id":5091,"message":0.0103,"country":"GB","sunrise":1485762037,"sunset":1485794875},"id":2643743,"name":"London","cod":200}
-        if(json.cod !== 200){
-          this.setState({error: true})
-        }
-        const { name: city, 
-                main: {humidity, temp: temperature, temp_max: high, temp_min: low}, 
-                sys: { sunrise, sunset }, 
-                weather: weatherArr
-              } = json
-        const { description, icon, main } = weatherArr[0]
-        const weather: CurrentWeatherType = {
-          city, description, high, humidity,icon,
-          low, main, sunrise, sunset, temperature,
-        }
-        console.log(weather)
-        this.setState({weather})
-      });
+      // json = json.cod === 200 ? json : {"coord":{"lon":-0.13,"lat":51.51},"weather":[{"id":300,"main":"Drizzle","description":"light intensity drizzle","icon":"09d"}],"base":"stations","main":{"temp":28.32,"pressure":1012,"humidity":81,"temp_min":27.15,"temp_max":28.15},"visibility":10000,"wind":{"speed":4.1,"deg":80},"clouds":{"all":90},"dt":1485789600,"sys":{"type":1,"id":5091,"message":0.0103,"country":"GB","sunrise":1485762037,"sunset":1485794875},"id":2643743,"name":"London","cod":200}
+      if(json.cod !== 200){
+        this.setState({error: true})
+      }
+      const { name: city, 
+              main: {humidity, temp: temperature, temp_max: high, temp_min: low}, 
+              sys: { sunrise, sunset }, 
+              weather: weatherArr
+            } = json
+      const { description, icon, main } = weatherArr[0]
+      const weather: CurrentWeatherType = {
+        city, description, high, humidity,icon,
+        low, main, sunrise, sunset, temperature,
+      }
+      console.log(weather)
+      this.setState({weather})
+    })
+    .catch(error => {
+      console.log(error)
+    })
 
   } 
 }
