@@ -14,7 +14,7 @@
 .location {
   background: linear-gradient(-45deg, rgba(0,9,36,1) 0%, rgba(75,183,252,1) 0%, rgb(131, 82, 236) 100%);
   width: 80%;
-  padding: 10px 30px 20px 30px;
+  padding: 20px 30px 20px 30px;
   border-radius: .6em;
   color: #fff;
   font-family: -apple-system,BlinkMacSystemFont,sans-serif,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial;
@@ -103,7 +103,7 @@
   background: none;
   border: solid 2px #fff;
   border-radius: 1.5em;
-  padding: 10px 18px 10px 18px;
+  padding: 6px 18px 6px 18px;
   letter-spacing: 0.9px;
   margin-top: 20px;
   margin-left: 15px;
