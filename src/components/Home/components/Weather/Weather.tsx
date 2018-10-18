@@ -27,7 +27,7 @@ interface State {
 }
 
 export default class Weather extends React.Component<{}, State> {
-  public state = {
+  public readonly state = {
     countryCode: 'CA',
     error: null,
     latitude: localStorage.getItem('latitude') || null,
@@ -36,44 +36,48 @@ export default class Weather extends React.Component<{}, State> {
     unit: 'metric',
     weather: null,
   }
-  public render() {
-    this.getCoords()
-    const { location: city, countryCode, unit } = this.state;
+
+  public componentDidMount() {
+    const { location: city, countryCode, unit, weather } = this.state;
     const API_KEY: string = process.env.REACT_APP_WEATHER_API_KEY || '';
-    if(this.state && this.state.weather){
-      const {weather} = this.state;
-      if(weather){
-        return (
-          <div className="mainContainer">
-            <div className="location">
-              <div className="leftAuth">
-                <form onSubmit={this.submitNumber}>
-                  <label className='label'>Location:</label><br />
-                  <input
-                    className="locationInput"
-                    type="text"
-                    value={this.state.location || ''}
-                    onChange={this.handleChange}
-                  />
-                  <input className="submitButton" type="submit" value="Submit" />
-                </form>
-              </div>
-            </div>
-            <div className="weather">
-              <CurrentWeather {...weather}/>
-            </div>
-          </div>
-        )
-      }
+    if (!weather) {
+      this.fetchWeather(city, countryCode, unit, API_KEY);
     }
-    this.fetchWeather(city, countryCode, unit, API_KEY);
-    return (
+  }
+
+  public render() {
+    const { weather } = this.state;
+    this.getCoords()
+
+    const weatherCardMarkup = weather ? (
       <div className="mainContainer">
-      <div className="weather">
-        {this.state.error ? <ErrorMessage/> : <em>Weather loading</em>}
+        <div className="location">
+          <div className="leftAuth">
+            <form onSubmit={this.submitNumber}>
+              <label className='label'>Location:</label><br />
+              <input
+                className="locationInput"
+                type="text"
+                value={this.state.location || ''}
+                onChange={this.handleChange}
+              />
+              <input className="submitButton" type="submit" value="Submit" />
+            </form>
+          </div>
+        </div>
+        <div className="weather">
+          <CurrentWeather {...weather}/>
+        </div>
       </div>
-    </div>
-    )
+    ) : (
+      <div className="mainContainer">
+        <div className="weather">
+          {this.state.error ? <ErrorMessage/> : <em>Weather loading</em>}
+        </div>
+      </div>
+    );
+
+    return weatherCardMarkup;
   }
 
   public handleChange = (event: any) => {
