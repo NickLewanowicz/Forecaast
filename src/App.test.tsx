@@ -10,19 +10,19 @@ class LocalStorageMock {
     this.store = {};
   }
 
-  clear() {
+  public clear() {
     this.store = {};
   }
 
-  getItem(key:any) {
+  public getItem(key:any) {
     return this.store[key] || null;
   }
 
-  setItem(key:any, value:any) {
+  public setItem(key:any, value:any) {
     this.store[key] = value.toString();
   }
 
-  removeItem(key:any) {
+  public removeItem(key:any) {
     delete this.store[key];
   }
 };
