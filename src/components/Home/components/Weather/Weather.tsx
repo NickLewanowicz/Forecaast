@@ -17,21 +17,27 @@ export interface CurrentWeatherType {
 
 interface State {
   weather: CurrentWeatherType | null; 
+  latitude: string | null;
   location: string;
+  longitude: string | null;
   countryCode: string;
   unit: string;
   error: boolean | null;
+
 }
 
 export default class Weather extends React.Component<{}, State> {
   public state = {
     countryCode: 'CA',
     error: null,
+    latitude: localStorage.getItem('latitude') || null,
     location: 'Ottawa',
+    longitude: localStorage.getItem('longitude') || null,
     unit: 'metric',
-    weather: null
+    weather: null,
   }
   public render() {
+    this.getCoords()
     const { location: city, countryCode, unit } = this.state;
     const API_KEY: string = process.env.REACT_APP_WEATHER_API_KEY || '';
     if(this.state && this.state.weather){
@@ -84,10 +90,24 @@ export default class Weather extends React.Component<{}, State> {
     this.fetchWeather(city, countryCode, unit, API_KEY);
   }
 
+  private getCoords = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        function success(position:any) {
+          localStorage.setItem('latitude', position.coords.latitude)
+          localStorage.setItem('longitude', position.coords.longitude)
+        },
+        function error(errorMessage) {
+          console.error('An error has occured while retrieving location', errorMessage)
+          return null
+        }  
+      )
+    }
+  }
+
   private fetchWeather( city: string,countryCode: string, unit:string, apiKey:string):void {
     fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&units=${unit}&appid=${apiKey}`)
     .then(res => {
-        console.log(res);
         return res.json()
       })
     .catch(error => {
@@ -108,7 +128,6 @@ export default class Weather extends React.Component<{}, State> {
         city, description, high, humidity,icon,
         low, main, sunrise, sunset, temperature,
       }
-      console.log(weather)
       this.setState({weather})
     })
     .catch(error => {
