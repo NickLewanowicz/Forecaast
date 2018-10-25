@@ -1,6 +1,13 @@
 import * as React from 'react';
+
+import * as localforage from 'localforage';
+
 import {CurrentWeather, ErrorMessage} from './components';
 import './Weather.css'
+
+const store = localforage.createInstance({
+  name: "forecaastStore"
+});
 
 export interface CurrentWeatherType {
   city: string;
@@ -17,9 +24,9 @@ export interface CurrentWeatherType {
 
 interface State {
   weather: CurrentWeatherType | null; 
-  latitude: string | null;
+  latitude: string | Promise<{}> | null;
   location: string;
-  longitude: string | null;
+  longitude: string | Promise<{}> | null;
   countryCode: string;
   unit: string;
   error: boolean | null;
@@ -30,9 +37,9 @@ export default class Weather extends React.Component<{}, State> {
   public readonly state = {
     countryCode: 'CA',
     error: null,
-    latitude: localStorage.getItem('latitude') || null,
+    latitude: store.getItem('latitude'),
     location: 'Ottawa',
-    longitude: localStorage.getItem('longitude') || null,
+    longitude: store.getItem('longitude'),
     unit: 'metric',
     weather: null,
   }
@@ -48,7 +55,7 @@ export default class Weather extends React.Component<{}, State> {
   public render() {
     const { weather } = this.state;
     this.getCoords()
-
+    console.log(this.state)
     const weatherCardMarkup = weather ? (
       <div className="mainContainer">
         <div className="location">
@@ -94,12 +101,12 @@ export default class Weather extends React.Component<{}, State> {
     this.fetchWeather(city, countryCode, unit, API_KEY);
   }
 
-  private getCoords = () => {
+  private getCoords = async () => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         function success(position:any) {
-          localStorage.setItem('latitude', position.coords.latitude)
-          localStorage.setItem('longitude', position.coords.longitude)
+          store.setItem('latitude', position.coords.latitude)
+          store.setItem('longitude', position.coords.longitude)
         },
         function error(errorMessage) {
           console.error('An error has occured while retrieving location', errorMessage)
