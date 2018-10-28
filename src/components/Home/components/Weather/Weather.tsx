@@ -5,10 +5,6 @@ import * as localforage from 'localforage';
 import {CurrentWeather, ErrorMessage} from './components';
 import './Weather.css'
 
-const store = localforage.createInstance({
-  name: "forecaastStore"
-});
-
 export interface CurrentWeatherType {
   city: string;
   high: number;
@@ -30,16 +26,15 @@ interface State {
   countryCode: string;
   unit: string;
   error: boolean | null;
-
 }
 
 export default class Weather extends React.Component<{}, State> {
   public readonly state = {
     countryCode: 'CA',
     error: null,
-    latitude: store.getItem('latitude'),
+    latitude: localforage.getItem('latitude'),
     location: 'Ottawa',
-    longitude: store.getItem('longitude'),
+    longitude: localforage.getItem('longitude'),
     unit: 'metric',
     weather: null,
   }
@@ -105,8 +100,8 @@ export default class Weather extends React.Component<{}, State> {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         function success(position:any) {
-          store.setItem('latitude', position.coords.latitude)
-          store.setItem('longitude', position.coords.longitude)
+          localforage.setItem('latitude', position.coords.latitude)
+          localforage.setItem('longitude', position.coords.longitude)
         },
         function error(errorMessage) {
           console.error('An error has occured while retrieving location', errorMessage)
