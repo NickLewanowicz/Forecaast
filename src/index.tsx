@@ -7,19 +7,24 @@ import App from './App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
-
 localforage.config({
   description : 'Forecaast IndexDB used to store all location/weather data',
-  driver      : localforage.WEBSQL, // Force WebSQL; same as using setDriver()
+  driver      : localforage.INDEXEDDB, // Force WebSQL; same as using setDriver()
   name        : 'forecaast',
   size        : 4980736, // Size of database, in bytes. WebSQL-only for now.
   storeName   : 'weatherData', // Should be alphanumeric, with underscores.
   version     : 1.0
-
 });
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root') as HTMLElement
-);
-registerServiceWorker();
+localforage.ready().then(()=> {
+  ReactDOM.render(
+    <App />,
+    document.getElementById('root') as HTMLElement
+  );
+  registerServiceWorker();
+  console.log(localforage.driver()); // LocalStorage
+}).catch((e) => {
+  console.log(e); // `No available storage method found.`
+});
+
+
